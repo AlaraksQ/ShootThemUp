@@ -1,0 +1,14 @@
+.vs
+DerivedDataCache/
+Intermediate/
+Saved/
+Binaries/
+Build/
+*.sln
+*.log
+*.VC.db
+*.opensdf
+*.sdf
+*.xcodeproj
+*.user
+*.userprefs
