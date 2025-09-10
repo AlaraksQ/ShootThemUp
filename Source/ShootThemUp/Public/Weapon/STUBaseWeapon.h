@@ -12,8 +12,8 @@ UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ASTUBaseWeapon();
 
 	virtual void Fire();
@@ -30,5 +30,9 @@ protected:
 
 	virtual void BeginPlay() override;
 	void MakeShot();
-
+	APlayerController* GetPlayerController() const;
+	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation);
+	FVector GetMuzzleWorldLocation() const;
+	bool GetTraceData(FVector& TraceStart, FVector& TracewEnd);
+	void MakeHit(FHitResult& HitResult, FVector& TraceStart, FVector& TraceEnd);
 };
