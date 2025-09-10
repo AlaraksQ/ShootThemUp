@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
+#include "Engine/DamageEvents.h"
 
 ASTUBaseWeapon::ASTUBaseWeapon()
 {
@@ -46,6 +47,7 @@ void ASTUBaseWeapon::MakeShot()
 
 	if (HitResult.bBlockingHit)
 	{
+		MakeDamage(HitResult);
 		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f );
 	}
@@ -117,4 +119,15 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, FVector& TraceStart, FVector
 		ECollisionChannel::ECC_Visibility,
 		CollisionParams
 	);
+}
+
+void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult)
+{
+	const auto DamagedActor = HitResult.GetActor();
+	if (!DamagedActor)
+	{
+		return;
+	}
+
+	DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
 }
