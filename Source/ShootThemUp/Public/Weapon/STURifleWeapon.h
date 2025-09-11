@@ -22,9 +22,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float BulletSpread = 1.5f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float DamageAmount = 10.0f;
+
 	virtual void MakeShot() override;
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TracewEnd) override;
+
 	
 private:
 	FTimerHandle ShotTImerHandle;
+
+	void MakeDamage(const FHitResult& HitResult);
 };

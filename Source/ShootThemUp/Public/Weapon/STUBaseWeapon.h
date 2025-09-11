@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "STUBaseWeapon.generated.h"
 
+
 class USkeletalMeshComponent;
 
 UCLASS()
@@ -23,14 +24,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USkeletalMeshComponent* WeaponMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FName MuzzleSocketName = "MuzzleSocket";
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float TraceMaxDistance = 1500;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float DamageAmount = 10.0f;
 
 	virtual void BeginPlay() override;
 	virtual void MakeShot();
@@ -40,5 +38,4 @@ protected:
 	bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation);
 	FVector GetMuzzleWorldLocation() const;
 	void MakeHit(FHitResult& HitResult, FVector& TraceStart, FVector& TraceEnd);
-	void MakeDamage(const FHitResult& HitResult);
 };

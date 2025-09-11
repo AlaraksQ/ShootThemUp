@@ -7,7 +7,6 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
-#include "Engine/DamageEvents.h"
 
 ASTUBaseWeapon::ASTUBaseWeapon()
 {
@@ -97,15 +96,4 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, FVector& TraceStart, FVector
 		ECollisionChannel::ECC_Visibility,
 		CollisionParams
 	);
-}
-
-void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult)
-{
-	const auto DamagedActor = HitResult.GetActor();
-	if (!DamagedActor)
-	{
-		return;
-	}
-
-	DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
 }
