@@ -9,8 +9,8 @@
 
 void ASTURifleWeapon::StartFire()
 {
-	MakeShot();
 	GetWorldTimerManager().SetTimer(ShotTImerHandle, this, &ASTURifleWeapon::MakeShot, TimeBetweenShots, true);
+	MakeShot();
 }
 
 void ASTURifleWeapon::StopFire()

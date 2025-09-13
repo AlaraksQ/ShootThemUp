@@ -50,14 +50,7 @@ void USTUWeaponComponent::SwitchWeapon()
 //TODO Keep firing after reload if mouse still pressed
 void USTUWeaponComponent::Reload()
 {
-	if (!CanReload())
-	{
-		return;
-	}
-
-	ReloadAnimInProgress = true;
-	StopFire();
-	PlayAnimMontage(CurrentReloadAnimMontage);
+	ChangeClip();
 }
 
 void USTUWeaponComponent::BeginPlay()
@@ -102,6 +95,7 @@ void USTUWeaponComponent::SpawnWeapons()
 			continue;
 		}
 
+		Weapon->OnClipEmpty.AddUObject(this, &USTUWeaponComponent::OnEmptyClip);
 		Weapon->SetOwner(Character);
 		Weapons.Add(Weapon);
 
@@ -207,7 +201,10 @@ bool USTUWeaponComponent::CanEquip() const
 
 bool USTUWeaponComponent::CanReload() const
 {
-	return CurrentWeapon && !EquipAnimInProgress && !ReloadAnimInProgress;
+	return CurrentWeapon 
+		&& !EquipAnimInProgress 
+		&& !ReloadAnimInProgress 
+		&& CurrentWeapon->CanReload();
 }
 
 void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComponent)
@@ -219,4 +216,22 @@ void USTUWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComponent
 	}
 
 	ReloadAnimInProgress = false;
+}
+
+void USTUWeaponComponent::OnEmptyClip()
+{
+	ChangeClip();
+}
+
+void USTUWeaponComponent::ChangeClip()
+{
+	if (!CanReload())
+	{
+		return;
+	}
+
+	CurrentWeapon->StopFire();
+	CurrentWeapon->ChangeClip();
+	ReloadAnimInProgress = true;
+	PlayAnimMontage(CurrentReloadAnimMontage);
 }

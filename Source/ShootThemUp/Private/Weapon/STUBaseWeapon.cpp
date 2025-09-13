@@ -104,13 +104,20 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, FVector& TraceStart, FVector
 
 void ASTUBaseWeapon::DecreaseAmmo()
 {
+	if (CurrentAmmo.BulletsInClip == 0)
+	{
+		UE_LOG(LogBaseWeapon, Warning, TEXT("Clip is empty"));
+		return;
+	}
+
 	CurrentAmmo.BulletsInClip--;
 	LogAmmo();
 
 
 	if (IsClipEmpty() && !IsAmmoEmpty())
 	{
-		ChangeClip();
+		StopFire();
+		OnClipEmpty.Broadcast();
 	}
 }
 
@@ -126,12 +133,22 @@ bool ASTUBaseWeapon::IsClipEmpty() const
 
 void ASTUBaseWeapon::ChangeClip()
 {
-	CurrentAmmo.BulletsInClip = DefaultAmmo.BulletsInClip;
 	if (!CurrentAmmo.IsInfinite)
 	{
+		if (CurrentAmmo.Clips == 0)
+		{
+			UE_LOG(LogBaseWeapon, Warning, TEXT("No more clips"));
+			return;
+		}
 		CurrentAmmo.Clips--;
 	}
+	CurrentAmmo.BulletsInClip = DefaultAmmo.BulletsInClip;
 	UE_LOG(LogBaseWeapon, Display, TEXT("Reload done."));
+}
+
+bool ASTUBaseWeapon::CanReload() const
+{
+	return CurrentAmmo.BulletsInClip < DefaultAmmo.BulletsInClip && CurrentAmmo.Clips > 0;
 }
 
 void ASTUBaseWeapon::LogAmmo()
