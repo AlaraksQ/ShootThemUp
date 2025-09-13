@@ -47,6 +47,7 @@ void USTUWeaponComponent::SwitchWeapon()
 	EquipWeapon(CurrentWeaponIndex);
 }
 
+//TODO Keep firing after reload if mouse still pressed
 void USTUWeaponComponent::Reload()
 {
 	if (!CanReload())
@@ -55,6 +56,7 @@ void USTUWeaponComponent::Reload()
 	}
 
 	ReloadAnimInProgress = true;
+	StopFire();
 	PlayAnimMontage(CurrentReloadAnimMontage);
 }
 
