@@ -89,6 +89,8 @@ void ASTUBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		"Fire", IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
 	PlayerInputComponent->BindAction(
 		"SwitchWeapon", IE_Pressed, WeaponComponent, &USTUWeaponComponent::SwitchWeapon);
+	PlayerInputComponent->BindAction(
+		"Reload", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
 }
 
 void ASTUBaseCharacter::MoveForward(float Amount)
