@@ -11,7 +11,7 @@ void ASTURocketLauncherWeapon::StartFire()
 
 void ASTURocketLauncherWeapon::MakeShot()
 {
-	if (!GetWorld())
+	if (!GetWorld() || IsAmmoEmpty())
 	{
 		return;
 	}
@@ -41,4 +41,6 @@ void ASTURocketLauncherWeapon::MakeShot()
 		Projectile->SetOwner(GetOwner());
 		Projectile->FinishSpawning(SpawnTransform);
 	}
+
+	DecreaseAmmo();
 }

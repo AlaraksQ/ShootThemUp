@@ -8,6 +8,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/Character.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
+
 ASTUBaseWeapon::ASTUBaseWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -20,6 +22,8 @@ void ASTUBaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	check(WeaponMeshComponent);
+
+	CurrentAmmo = DefaultAmmo;
 }
 
 void ASTUBaseWeapon::StartFire()
@@ -96,4 +100,44 @@ void ASTUBaseWeapon::MakeHit(FHitResult& HitResult, FVector& TraceStart, FVector
 		ECollisionChannel::ECC_Visibility,
 		CollisionParams
 	);
+}
+
+void ASTUBaseWeapon::DecreaseAmmo()
+{
+	CurrentAmmo.BulletsInClip--;
+	LogAmmo();
+
+
+	if (IsClipEmpty() && !IsAmmoEmpty())
+	{
+		ChangeClip();
+	}
+}
+
+bool ASTUBaseWeapon::IsAmmoEmpty() const
+{
+	return !CurrentAmmo.IsInfinite && CurrentAmmo.Clips == 0 && IsClipEmpty();
+}
+
+bool ASTUBaseWeapon::IsClipEmpty() const
+{
+	return CurrentAmmo.BulletsInClip == 0;
+}
+
+void ASTUBaseWeapon::ChangeClip()
+{
+	CurrentAmmo.BulletsInClip = DefaultAmmo.BulletsInClip;
+	if (!CurrentAmmo.IsInfinite)
+	{
+		CurrentAmmo.Clips--;
+	}
+	UE_LOG(LogBaseWeapon, Display, TEXT("Reload done."));
+}
+
+void ASTUBaseWeapon::LogAmmo()
+{
+	FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.BulletsInClip) + " / ";
+	AmmoInfo += CurrentAmmo.IsInfinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
+	UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
+
 }
