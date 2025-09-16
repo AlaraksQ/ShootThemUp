@@ -56,6 +56,17 @@ void USTUWeaponComponent::Reload()
 	ChangeClip();
 }
 
+// Note! Check result before using strcture fields
+bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
+{
+	if (CurrentWeapon)
+	{
+		UIData = CurrentWeapon->GetWeaponUIData();
+		return true;
+	}
+	return false;
+}
+
 void USTUWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
