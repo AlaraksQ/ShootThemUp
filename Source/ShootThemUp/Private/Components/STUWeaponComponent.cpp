@@ -57,11 +57,21 @@ void USTUWeaponComponent::Reload()
 }
 
 // Note! Check result before using strcture fields
-bool USTUWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const
+bool USTUWeaponComponent::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 {
 	if (CurrentWeapon)
 	{
 		UIData = CurrentWeapon->GetWeaponUIData();
+		return true;
+	}
+	return false;
+}
+
+bool USTUWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
+{
+	if (CurrentWeapon)
+	{
+		AmmoData = CurrentWeapon->GetWeaponAmmoData();
 		return true;
 	}
 	return false;
