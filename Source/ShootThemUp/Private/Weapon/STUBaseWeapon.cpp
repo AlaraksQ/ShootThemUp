@@ -133,6 +133,12 @@ bool ASTUBaseWeapon::IsClipEmpty() const
 	return CurrentAmmo.BulletsInClip == 0;
 }
 
+bool ASTUBaseWeapon::IsAmmoFull() const
+{
+	return CurrentAmmo.Clips == DefaultAmmo.Clips && 
+		CurrentAmmo.BulletsInClip == DefaultAmmo.BulletsInClip;
+}
+
 void ASTUBaseWeapon::ChangeClip()
 {
 	if (!CurrentAmmo.IsInfinite)
@@ -151,6 +157,39 @@ void ASTUBaseWeapon::ChangeClip()
 bool ASTUBaseWeapon::CanReload() const
 {
 	return CurrentAmmo.BulletsInClip < DefaultAmmo.BulletsInClip && CurrentAmmo.Clips > 0;
+}
+
+bool ASTUBaseWeapon::TryToAddAmmo(int32 ClipsAmount)
+{
+	if (CurrentAmmo.IsInfinite || IsAmmoFull() || ClipsAmount <= 0)
+	{
+		return false;
+	}
+
+	if (IsAmmoEmpty())
+	{
+		CurrentAmmo.Clips = FMath::Clamp(ClipsAmount, 0, DefaultAmmo.Clips + 1);
+		OnClipEmpty.Broadcast();
+	}
+	else if(CurrentAmmo.Clips < DefaultAmmo.Clips)
+	{
+		const auto NextClipsAmount = CurrentAmmo.Clips + ClipsAmount;
+		if (DefaultAmmo.Clips - NextClipsAmount >= 0)
+		{
+			CurrentAmmo.Clips = NextClipsAmount;
+		}
+		else
+		{
+			CurrentAmmo.Clips = DefaultAmmo.Clips;
+			CurrentAmmo.BulletsInClip = DefaultAmmo.BulletsInClip;
+		}
+	}
+	else
+	{
+		CurrentAmmo.BulletsInClip = DefaultAmmo.BulletsInClip;
+	}
+
+	return true;
 }
 
 void ASTUBaseWeapon::LogAmmo()

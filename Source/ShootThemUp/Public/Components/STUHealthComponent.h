@@ -25,7 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	bool IsDead() const { return FMath::IsNearlyZero(Health); };
 
-	float getHealth() const { return Health; };	
+	float getHealth() const { return Health; };
+
+	bool TryToAddHealth(float HealthAmount);
+	bool IsHealthFull() const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))
