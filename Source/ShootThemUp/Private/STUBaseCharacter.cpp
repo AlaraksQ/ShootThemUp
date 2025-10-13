@@ -47,6 +47,7 @@ void ASTUBaseCharacter::BeginPlay()
 	check(HealthComponent);
 	check(HealthTextComponent);
 	check(GetCharacterMovement());
+	check(GetMesh());
 
 	// BeginPlay on components work earlier than here, 
 	// so we need to update health manualy here
@@ -139,7 +140,7 @@ float ASTUBaseCharacter::GetMovementDirection() const
 
 void ASTUBaseCharacter::OnDeath()
 {
-	PlayAnimMontage(DeathAnimMontage);	//nullptr proceeds inside function
+	// PlayAnimMontage(DeathAnimMontage);	//nullptr proceeds inside function
 	GetCharacterMovement()->DisableMovement();
 
 	SetLifeSpan(LifeSpanOnDeath);
@@ -151,6 +152,9 @@ void ASTUBaseCharacter::OnDeath()
 
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	WeaponComponent->StopFire();
+
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetSimulatePhysics(true);
 }
 
 void ASTUBaseCharacter::OnHealthChanged(float NewHealth)
