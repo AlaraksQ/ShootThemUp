@@ -51,7 +51,7 @@ void ASTUBaseCharacter::BeginPlay()
 
 	// BeginPlay on components work earlier than here, 
 	// so we need to update health manualy here
-	OnHealthChanged(HealthComponent->getHealth());	
+	OnHealthChanged(HealthComponent->getHealth(), 0.0f);
 
 	HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ASTUBaseCharacter::OnHealthChanged);
@@ -157,7 +157,7 @@ void ASTUBaseCharacter::OnDeath()
 	GetMesh()->SetSimulatePhysics(true);
 }
 
-void ASTUBaseCharacter::OnHealthChanged(float NewHealth)
+void ASTUBaseCharacter::OnHealthChanged(float NewHealth, float HealthDelta)
 {
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), NewHealth)));
 }
